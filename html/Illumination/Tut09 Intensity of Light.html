@@ -1,0 +1,34 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <meta http-equiv="X-UA-Compatible" content="IE=Edge"><title>Intensity of Light</title><link rel="stylesheet" href="chunked.css" type="text/css"><meta name="generator" content="DocBook XSL-NS Stylesheets V1.75.2"><link rel="home" href="../index.html" title="Learning Modern 3D Graphics Programming"><link rel="up" href="Tutorial 09.html" title="Chapter&nbsp;9.&nbsp;Lights On"><link rel="prev" href="Tut09 Global Illumination.html" title="Global Illumination"><link rel="next" href="Tut09 In Review.html" title="In Review"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Intensity of Light</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="Tut09 Global Illumination.html">Prev</a>&nbsp;</td><th width="60%" align="center">Chapter&nbsp;9.&nbsp;Lights On</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="Tut09 In Review.html">Next</a></td></tr></table><hr></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e9515"></a>Intensity of Light</h2></div></div></div><p>There are many, many things wrong with the rather primitive lighting models introduced
+            thus far. But one of the most important is the treatment of the lighting
+            intensity.</p><p>Thus far, we have used light intensity like a color. We clamp it to the range [0, 1].
+            We even make sure that combined intensities from different lighting models always are
+            within that range.</p><p>What this effectively means is that the light does not brighten the scene. The scene
+            without the light is fully lit; our lights simply <span class="emphasis"><em>darken</em></span> parts of
+            the scene. They take the diffuse color and make it smaller, because multiplying with a
+            number on the range [0, 1] can only ever make a number smaller (or the same).</p><p>This is of course not realistic. In reality, there is no such thing as a
+                <span class="quote">&#8220;<span class="quote">maximum</span>&#8221;</span> illumination or brightness. There is no such thing as a (1,
+            1, 1) light intensity. The actual range of light intensity per wavelength is on the
+            range [0, &#8734;). This also means that the range of intensity for reflected light is [0, &#8734;);
+            after all, if you shine a really bright light on a surface, it will reflect a lot of it.
+            A surface that looks dark blue under dim light can appear light blue under very bright
+            light.</p><p>Of course in the real world, things tend to catch on fire if you shine <span class="emphasis"><em>too
+                much</em></span> light at them, but that's not something we need to model.</p><p>The concept of lighting darkening a scene was common for a long time in real-time
+            applications. It is another part of the reason why, for so many years, 3D games tended
+            to avoid the bright outdoors, preferring corridors with darker lighting. The sun is a
+            powerful light source; binding lighting intensity to the [0, 1] range does not lead to a
+            realistic vision of the outdoors.</p><p>One obvious way to correct this is to take all of the diffuse colors and divide them by
+            a value like 2. Then increase your light intensity range from [0, 1] to [0, 2]. This is
+            a workable solution, to some extent. Lights can be brighter than 1.0, and lighting can
+            serve to increase the brightness of the diffuse color as well as decrease it. Of course,
+            2 is just as far from infinity as 1 is, so it is not technically any closer to proper
+            lighting. But it is an improvement.</p><p>This technique does have its flaws. As we will see in later tutorials, you often will
+            want to render the same object multiple times and combine the results. This method
+            does not work when adding contributions from multiple light sources this way, unless you
+            limit the sum total of all lights to the same value. Just as we did for diffuse when
+            combining it with an ambient term.</p><p>It is certainly possible on modern hardware to model light intensity correctly. And we
+            will eventually do that. But these more primitive lighting models do still have their
+            uses in some cases. And it is illustrative to see what an improvement having proper
+            lighting intensity can make on the result. The lighting computations themselves do not
+            change; what changes are the numbers fed into them.</p></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="Tut09 Global Illumination.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="Tutorial 09.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="Tut09 In Review.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Global Illumination&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="../index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;In Review</td></tr></table></div></body></html>
