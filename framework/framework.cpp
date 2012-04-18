@@ -11,6 +11,8 @@
 #include <sstream>
 #include <exception>
 #include <stdexcept>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <glload/gl_3_3.h>
 #include <glload/gll.hpp>
@@ -22,7 +24,8 @@
 #ifdef LOAD_X11
 #define APIENTRY
 #endif
-
+#define NUMPROJECTORS 1
+#define FULLSCREEN 0
 namespace Framework
 {
 	GLuint LoadShader(GLenum eShaderType, const std::string &strShaderFilename)
@@ -82,12 +85,11 @@ namespace Framework
 	}
 }
 
-
+void addProjector();
+void graphicSettings();
+void bindBuffer();
 void init();
-void init1();
-void init2();
-void display2();
-void display1();
+void display();
 void reshape(int w, int h);
 void keyboard(unsigned char key, int x, int y);
 
@@ -132,13 +134,17 @@ void APIENTRY DebugFunc(GLenum source, GLenum type, GLuint id, GLenum severity, 
 
 int main(int argc, char** argv)
 {
+fprintf(stderr, "test");
 	glutInit(&argc, argv);
-
-	int width = 500;
-	int height = 500;
+	int monitorWidth = 1920;
+	int projectorWidth = 1920;
+	int monitorHeight = 1024;
+	int windowWidth = 500;
+	int windowHeight = 500;
 	unsigned int displayMode = GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH | GLUT_STENCIL;
-	displayMode = defaults(displayMode, width, height);
+	displayMode = defaults(displayMode, windowWidth, windowHeight);
 
+fprintf(stderr, "test");
 	glutInitDisplayMode (displayMode);
 	glutInitContextVersion (3, 2);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
@@ -148,10 +154,11 @@ int main(int argc, char** argv)
 
   std::cout << "Creating first window\n";
 
-	glutInitWindowSize (width, height); 
+	glutInitWindowSize (500, 500); 
 
-	glutCreateWindow("First window");
-	glutPositionWindow(100, 200);
+//MONITOR
+	glutCreateWindow("monitor");
+	glutPositionWindow(100, 100);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
   std::cout << "Loading functions\n";
@@ -161,24 +168,22 @@ int main(int argc, char** argv)
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
 		glDebugMessageCallbackARB(DebugFunc, (void*)15);
 	}
+	std::cout << "new monitor. window: "<< glutGetWindow() << std::endl;
+if(FULLSCREEN){ glutFullScreen(); }
+	glutDisplayFunc(display); glutReshapeFunc(reshape); glutKeyboardFunc(keyboard);
+  	init(); //monitor is added here as well as binding buffer
 
-	glutDisplayFunc(display1); 
-	glutReshapeFunc(reshape);
-	glutKeyboardFunc(keyboard);
-  init();
-	init1();
-
-  std::cout << "Creating second window\n";
-
-	glutCreateWindow("second window");
-	glutPositionWindow(100+width, 200);
+for(int i = 0; i < NUMPROJECTORS; i++){
+	glutCreateWindow("projector");
+	glutPositionWindow(monitorWidth+i*projectorWidth, 100);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
-	glutDisplayFunc(display2); 
+if(FULLSCREEN){ glutFullScreen(); }
+	glutDisplayFunc(display); 
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
-	init2();
-
+	addProjector();
+}
 
   std::cout << "going into glutMainLoop()\n";
   glutIdleFunc(NULL);
