@@ -90,6 +90,8 @@ void graphicSettings();
 void bindBuffer();
 void init();
 void display();
+void motion(int x, int y);
+void mouse(int button, int state, int x, int y);
 void reshape(int w, int h);
 void keyboard(unsigned char key, int x, int y);
 
@@ -170,7 +172,11 @@ fprintf(stderr, "test");
 	}
 	std::cout << "new monitor. window: "<< glutGetWindow() << std::endl;
 if(FULLSCREEN){ glutFullScreen(); }
-	glutDisplayFunc(display); glutReshapeFunc(reshape); glutKeyboardFunc(keyboard);
+	glutDisplayFunc(display); 
+	glutReshapeFunc(reshape); 
+	glutKeyboardFunc(keyboard);
+	glutMouseFunc(mouse);
+	glutMotionFunc(motion);
   	init(); //monitor is added here as well as binding buffer
 
 for(int i = 0; i < NUMPROJECTORS; i++){
@@ -182,6 +188,8 @@ if(FULLSCREEN){ glutFullScreen(); }
 	glutDisplayFunc(display); 
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
+	glutMouseFunc(mouse);
+	glutMotionFunc(motion);
 	addProjector();
 }
 
