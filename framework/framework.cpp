@@ -1,8 +1,6 @@
 //Copyright (C) 2010-2011 by Jason L. McKesson
 //This file is licensed under the MIT License.
 
-
-
 #include <algorithm>
 #include <string>
 #include <vector>
@@ -88,7 +86,7 @@ namespace Framework
 void addProjector();
 void graphicSettings();
 void bindBuffer();
-void init();
+void init(int argc, char ** argv);
 void display();
 void motion(int x, int y);
 void mouse(int button, int state, int x, int y);
@@ -136,7 +134,6 @@ void APIENTRY DebugFunc(GLenum source, GLenum type, GLuint id, GLenum severity, 
 
 int main(int argc, char** argv)
 {
-fprintf(stderr, "test");
 	glutInit(&argc, argv);
 	int monitorWidth = 1920;
 	int projectorWidth = 1920;
@@ -146,7 +143,6 @@ fprintf(stderr, "test");
 	unsigned int displayMode = GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH | GLUT_STENCIL;
 	displayMode = defaults(displayMode, windowWidth, windowHeight);
 
-fprintf(stderr, "test");
 	glutInitDisplayMode (displayMode);
 	glutInitContextVersion (3, 2);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
@@ -154,7 +150,7 @@ fprintf(stderr, "test");
 	glutInitContextFlags(GLUT_DEBUG);
 #endif
 
-  std::cout << "Creating first window\n";
+  std::cout << "[*] Creating first window\n";
 
 	glutInitWindowSize (500, 500); 
 
@@ -163,21 +159,21 @@ fprintf(stderr, "test");
 	glutPositionWindow(100, 100);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 
-  std::cout << "Loading functions\n";
+  std::cout << "[*] Loading functions\n";
 	glload::LoadFunctions();
 	if(glext_ARB_debug_output)
 	{
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
 		glDebugMessageCallbackARB(DebugFunc, (void*)15);
 	}
-	std::cout << "new monitor. window: "<< glutGetWindow() << std::endl;
+	std::cout << "[*] New monitor, window: "<< glutGetWindow() << std::endl;
 if(FULLSCREEN){ glutFullScreen(); }
 	glutDisplayFunc(display); 
 	glutReshapeFunc(reshape); 
 	glutKeyboardFunc(keyboard);
 	glutMouseFunc(mouse);
 	glutMotionFunc(motion);
-  	init(); //monitor is added here as well as binding buffer
+  init(argc, argv); //monitor is added here as well as binding buffer
 
 for(int i = 0; i < NUMPROJECTORS; i++){
 	glutCreateWindow("projector");
@@ -193,7 +189,7 @@ if(FULLSCREEN){ glutFullScreen(); }
 	addProjector();
 }
 
-  std::cout << "going into glutMainLoop()\n";
+  std::cout << "[*] Executing glutMainLoop()\n";
   glutIdleFunc(NULL);
 	glutMainLoop();
 	return 0;
